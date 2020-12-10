@@ -1,28 +1,26 @@
 import React, {Component} from 'react';
-import Sinderellas from '../database/Sinderellas'
+import Sinderellas from "../database/Sinderellas";
+import {UserService} from "../services/UserService";
+
 class Sinderellacomponent extends Component {
-    state={users:[], chosen:null}
+    state={users:[], chosen: null}
 
-        Select=(id)=>{
-        let {users}=this.state
-          let  chosen= users.find(user=>user.id===id)
-            this.setState({chosen})
-        }
-
+    UserServ= new UserService()
+    test=(id)=>{
+       this.UserServ.getUsersbyId(id).then(value=>this.setState({chosen:value}))
+    }
     render() {
-  let {users, chosen}=this.state
+let {users, chosen}=this.state
         return (
             <div>
-                {users.map(user=><Sinderellas item={user} key={user.id} Select={this.Select}/>)}
-                {chosen && <h1> {chosen.name}</h1>}
+                {users.map(user=> <Sinderellas item={user} test={this.test} key={user.id}/>)}
+                {chosen&&<Sinderellas item={chosen} onButton={true}/>}
             </div>
-
         );
     }
-    componentDidMount() {fetch("https://jsonplaceholder.typicode.com/users")
-        .then(user=>user.json())
-        .then(json=>this.setState({users:json}))
-    }
+    componentDidMount() {this.UserServ.getAllUsers().then(value=>this.setState({users: value}))
+
+        }
 
 }
 
