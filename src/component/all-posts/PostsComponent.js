@@ -1,30 +1,31 @@
 import React, {Component} from 'react';
-import {PostServices} from "../../services/Postsservices";
+import {PostService} from "../../services/Postsservices";
 import PostComponent from "../post/PostComponent";
 
-
 class PostsComponent extends Component {
+    state={posts:[], chose:null}
+    PostService=new PostService()
 
-    postService=new PostServices()
-    state= {posts:[], chosen: null}
-
-  Ddd(id){
-   this.postService.getPostById(id).then(value => this.setState({chosen:value}))
+    select=(id)=>{
+        this.PostService.getPostByid(id).then(value => this.setState({chose:value}))
     }
 
     render() {
-        let {posts, chosen}=this.state
+        let {posts,chose}=this.state
         return (
             <div>
-                {posts.map(value=><PostComponent item={value} Ddd={this.Ddd} key={value.id}/>)}
-                {chosen&&<PostComponent item={chosen} showButton={true}/>}
-                {console.log(chosen)}
+                {console.log(chose)}
+                {posts.map(value => <PostComponent item={value} key={value.id} select={this.select}/>)}
+                {chose&&<PostComponent item={chose} onButton={true}/>}
+
             </div>
         );
     }
-    componentDidMount (){
-      this.postService.getAllPosts().then(value => this.setState({posts:value}))
+
+    componentDidMount() {
+        this.PostService.getAllPosts().then(value => this.setState({posts:value}))
     }
 }
 
 export default PostsComponent;
+
